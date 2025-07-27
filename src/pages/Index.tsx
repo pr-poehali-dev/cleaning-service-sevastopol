@@ -27,7 +27,7 @@ export default function Index() {
     
     const service = servicePrices[serviceType as keyof typeof servicePrices];
     const areaTotal = parseFloat(squareMeters) * service.price;
-    const windowTotal = windowCount ? parseFloat(windowCount) * service.windowPrice : 0;
+    const windowTotal = (serviceType !== "maintenance" && windowCount) ? parseFloat(windowCount) * service.windowPrice : 0;
     
     setTotalCost(areaTotal + windowTotal);
   };
@@ -296,6 +296,7 @@ export default function Index() {
               <Select value={serviceType} onValueChange={(value) => {
                 setServiceType(value);
                 if (value === "maintenance") {
+                  setWindowCount("");
                   handleMaintenanceSelect();
                 }
                 calculateCost();
@@ -325,19 +326,21 @@ export default function Index() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-base font-medium">Количество окон (двухстворчатых)</Label>
-              <Input 
-                type="number" 
-                placeholder="Количество окон"
-                value={windowCount}
-                onChange={(e) => {
-                  setWindowCount(e.target.value);
-                  calculateCost();
-                }}
-                className="h-12"
-              />
-            </div>
+            {serviceType !== "maintenance" && (
+              <div className="space-y-2">
+                <Label className="text-base font-medium">Окна кв.м</Label>
+                <Input 
+                  type="number" 
+                  placeholder="Площадь окон в кв.м"
+                  value={windowCount}
+                  onChange={(e) => {
+                    setWindowCount(e.target.value);
+                    calculateCost();
+                  }}
+                  className="h-12"
+                />
+              </div>
+            )}
 
             {totalCost > 0 && (
               <div className="bg-primary/5 rounded-xl p-6 space-y-3">
