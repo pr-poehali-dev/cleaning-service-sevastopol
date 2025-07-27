@@ -23,11 +23,17 @@ export default function Index() {
   };
 
   const calculateCost = () => {
-    if (!serviceType || !squareMeters) return;
+    if (!serviceType || !squareMeters) {
+      setTotalCost(0);
+      return;
+    }
     
     const service = servicePrices[serviceType as keyof typeof servicePrices];
-    const areaTotal = parseFloat(squareMeters) * service.price;
-    const windowTotal = (serviceType !== "maintenance" && windowCount) ? parseFloat(windowCount) * service.windowPrice : 0;
+    const squareMetersNum = parseFloat(squareMeters) || 0;
+    const windowCountNum = parseFloat(windowCount) || 0;
+    
+    const areaTotal = squareMetersNum * service.price;
+    const windowTotal = (serviceType !== "maintenance" && windowCountNum > 0) ? windowCountNum * service.windowPrice : 0;
     
     setTotalCost(areaTotal + windowTotal);
   };
@@ -299,7 +305,7 @@ export default function Index() {
                   setWindowCount("");
                   handleMaintenanceSelect();
                 }
-                calculateCost();
+                setTimeout(() => calculateCost(), 0);
               }}>
                 <SelectTrigger className="h-12">
                   <SelectValue placeholder="Выберите тип уборки" />
@@ -320,7 +326,7 @@ export default function Index() {
                 value={squareMeters}
                 onChange={(e) => {
                   setSquareMeters(e.target.value);
-                  calculateCost();
+                  setTimeout(() => calculateCost(), 0);
                 }}
                 className="h-12"
               />
@@ -335,7 +341,7 @@ export default function Index() {
                   value={windowCount}
                   onChange={(e) => {
                     setWindowCount(e.target.value);
-                    calculateCost();
+                    setTimeout(() => calculateCost(), 0);
                   }}
                   className="h-12"
                 />
