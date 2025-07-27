@@ -1,8 +1,44 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
 
 export default function Index() {
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [serviceType, setServiceType] = useState("");
+  const [squareMeters, setSquareMeters] = useState("");
+  const [windowCount, setWindowCount] = useState("");
+  const [totalCost, setTotalCost] = useState(0);
+  const { toast } = useToast();
+
+  const servicePrices = {
+    "general": { price: 180, name: "Генеральная уборка" },
+    "construction": { price: 220, name: "После строительства" },
+    "maintenance": { price: 140, name: "Поддерживающая уборка" }
+  };
+
+  const calculateCost = () => {
+    if (!serviceType || !squareMeters) return;
+    
+    const basePrice = servicePrices[serviceType as keyof typeof servicePrices].price;
+    const areaTotal = parseFloat(squareMeters) * basePrice;
+    const windowTotal = windowCount ? parseFloat(windowCount) * 220 : 0;
+    
+    setTotalCost(areaTotal + windowTotal);
+  };
+
+  const handleMaintenanceSelect = () => {
+    toast({
+      title: "Важная информация",
+      description: "Поддерживающая уборка выполняется не позднее чем через неделю после генеральной уборки",
+      duration: 5000,
+    });
+  };
   const services = [
     {
       icon: "Home",
@@ -49,7 +85,7 @@ export default function Index() {
                   <Icon name="Phone" size={20} className="mr-2" />
                   Заказать уборку
                 </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-xl">
+                <Button variant="outline" size="lg" className="text-lg px-8 py-6 rounded-xl" onClick={() => setShowCalculator(true)}>
                   <Icon name="Calculator" size={20} className="mr-2" />
                   Рассчитать стоимость
                 </Button>
@@ -244,6 +280,109 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Calculator Modal */}
+      <Dialog open={showCalculator} onOpenChange={setShowCalculator}>
+        <DialogContent className="max-w-md mx-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center text-gray-900">
+              Калькулятор стоимости
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="space-y-2">
+              <Label className="text-base font-medium">Вид уборки</Label>
+              <Select value={serviceType} onValueChange={(value) => {
+                setServiceType(value);
+                if (value === "maintenance") {
+                  handleMaintenanceSelect();
+                }
+                calculateCost();
+              }}>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Выберите тип уборки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">Генеральная уборка (180 ₽/м²)</SelectItem>
+                  <SelectItem value="construction">После строительства (220 ₽/м²)</SelectItem>
+                  <SelectItem value="maintenance">Поддерживающая уборка (140 ₽/м²)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-base font-medium">Количество кв.м</Label>
+              <Input 
+                type="number" 
+                placeholder="Введите площадь"
+                value={squareMeters}
+                onChange={(e) => {
+                  setSquareMeters(e.target.value);
+                  calculateCost();
+                }}
+                className="h-12"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-base font-medium">Количество окон (двухстворчатых)</Label>
+              <Input 
+                type="number" 
+                placeholder="Количество окон (220 ₽ за окно)"
+                value={windowCount}
+                onChange={(e) => {
+                  setWindowCount(e.target.value);
+                  calculateCost();
+                }}
+                className="h-12"
+              />
+            </div>
+
+            {totalCost > 0 && (
+              <div className="bg-primary/5 rounded-xl p-6 space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Расчет стоимости:</h3>
+                <div className="space-y-2 text-sm text-gray-600">
+                  {serviceType && squareMeters && (
+                    <div className="flex justify-between">
+                      <span>{servicePrices[serviceType as keyof typeof servicePrices].name} ({squareMeters} м²)</span>
+                      <span>{(parseFloat(squareMeters) * servicePrices[serviceType as keyof typeof servicePrices].price).toLocaleString()} ₽</span>
+                    </div>
+                  )}
+                  {windowCount && (
+                    <div className="flex justify-between">
+                      <span>Мытье окон ({windowCount} шт.)</span>
+                      <span>{(parseFloat(windowCount) * 220).toLocaleString()} ₽</span>
+                    </div>
+                  )}
+                  <div className="border-t pt-2 flex justify-between font-semibold text-lg text-gray-900">
+                    <span>Итого:</span>
+                    <span className="text-primary">{totalCost.toLocaleString()} ₽</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              <Button 
+                className="flex-1 h-12" 
+                onClick={() => {
+                  if (totalCost > 0) {
+                    window.open('tel:+79785329403');
+                  }
+                }}
+                disabled={totalCost === 0}
+              >
+                <Icon name="Phone" size={20} className="mr-2" />
+                Заказать
+              </Button>
+              <Button variant="outline" className="flex-1 h-12" onClick={() => setShowCalculator(false)}>
+                Закрыть
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
