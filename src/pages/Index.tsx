@@ -45,7 +45,7 @@ export default function Index() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="text-lg px-8 py-6 rounded-xl">
+                <Button size="lg" className="text-lg px-8 py-6 rounded-xl" onClick={() => window.open('tel:+79785329403')}>
                   <Icon name="Phone" size={20} className="mr-2" />
                   Заказать уборку
                 </Button>
@@ -217,12 +217,16 @@ export default function Index() {
             по выбору подходящих услуг и расчету стоимости
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 rounded-xl">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 rounded-xl" onClick={() => window.open('tel:+79785329403')}>
               <Icon name="Phone" size={20} className="mr-2" />
-              +7 (978) 123-45-67
+              +7 (978) 532-94-03
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-xl border-white text-white hover:bg-white hover:text-primary">
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 rounded-xl" onClick={() => window.open('tel:+79782827725')}>
+              <Icon name="Phone" size={20} className="mr-2" />
+              +7 (978) 282-77-25
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-xl border-white text-white hover:bg-white hover:text-primary" onClick={() => window.open('https://wa.me/79785329403')}>
               <Icon name="MessageCircle" size={20} className="mr-2" />
               Написать в WhatsApp
             </Button>
