@@ -17,17 +17,17 @@ export default function Index() {
   const { toast } = useToast();
 
   const servicePrices = {
-    "general": { price: 180, name: "Генеральная уборка" },
-    "construction": { price: 220, name: "После строительства" },
-    "maintenance": { price: 140, name: "Поддерживающая уборка" }
+    "general": { price: 220, windowPrice: 220, name: "Генеральная уборка" },
+    "construction": { price: 240, windowPrice: 260, name: "После строительства" },
+    "maintenance": { price: 140, windowPrice: 140, name: "Поддерживающая уборка" }
   };
 
   const calculateCost = () => {
     if (!serviceType || !squareMeters) return;
     
-    const basePrice = servicePrices[serviceType as keyof typeof servicePrices].price;
-    const areaTotal = parseFloat(squareMeters) * basePrice;
-    const windowTotal = windowCount ? parseFloat(windowCount) * 220 : 0;
+    const service = servicePrices[serviceType as keyof typeof servicePrices];
+    const areaTotal = parseFloat(squareMeters) * service.price;
+    const windowTotal = windowCount ? parseFloat(windowCount) * service.windowPrice : 0;
     
     setTotalCost(areaTotal + windowTotal);
   };
@@ -304,8 +304,8 @@ export default function Index() {
                   <SelectValue placeholder="Выберите тип уборки" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="general">Генеральная уборка (180 ₽/м²)</SelectItem>
-                  <SelectItem value="construction">После строительства (220 ₽/м²)</SelectItem>
+                  <SelectItem value="general">Генеральная уборка (220 ₽/м²)</SelectItem>
+                  <SelectItem value="construction">После строительства (240 ₽/м²)</SelectItem>
                   <SelectItem value="maintenance">Поддерживающая уборка (140 ₽/м²)</SelectItem>
                 </SelectContent>
               </Select>
@@ -329,7 +329,7 @@ export default function Index() {
               <Label className="text-base font-medium">Количество окон (двухстворчатых)</Label>
               <Input 
                 type="number" 
-                placeholder="Количество окон (220 ₽ за окно)"
+                placeholder="Количество окон"
                 value={windowCount}
                 onChange={(e) => {
                   setWindowCount(e.target.value);
@@ -351,13 +351,18 @@ export default function Index() {
                   )}
                   {windowCount && (
                     <div className="flex justify-between">
-                      <span>Мытье окон ({windowCount} шт.)</span>
-                      <span>{(parseFloat(windowCount) * 220).toLocaleString()} ₽</span>
+                      <span>Мытье окон ({windowCount} м²)</span>
+                      <span>{(parseFloat(windowCount) * servicePrices[serviceType as keyof typeof servicePrices].windowPrice).toLocaleString()} ₽</span>
                     </div>
                   )}
-                  <div className="border-t pt-2 flex justify-between font-semibold text-lg text-gray-900">
-                    <span>Итого:</span>
-                    <span className="text-primary">{totalCost.toLocaleString()} ₽</span>
+                  <div className="border-t pt-2 space-y-1">
+                    <div className="flex justify-between font-semibold text-lg text-gray-900">
+                      <span>Приблизительно:</span>
+                      <span className="text-primary">{totalCost.toLocaleString()} ₽</span>
+                    </div>
+                    <p className="text-xs text-gray-500 text-center">
+                      Для более точной стоимости напишите или позвоните нам
+                    </p>
                   </div>
                 </div>
               </div>
