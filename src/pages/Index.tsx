@@ -351,8 +351,8 @@ export default function Index() {
             {totalCost > 0 && (
               <div className="bg-primary/5 rounded-xl p-6 space-y-3">
                 <div className="text-center">
+                  <div className="text-sm text-gray-600 mb-1">Итого:</div>
                   <div className="text-2xl font-bold text-primary">{totalCost.toLocaleString()} ₽</div>
-                  <p className="text-sm text-gray-600 mt-1">Расчет стоимости</p>
                 </div>
               </div>
             )}
