@@ -366,7 +366,7 @@ export default function Index() {
                   )}
                   <div className="border-t pt-2 space-y-1">
                     <div className="flex justify-between font-semibold text-lg text-gray-900">
-                      <span>Приблизительно:</span>
+                      <span>Итого:</span>
                       <span className="text-primary">{totalCost.toLocaleString()} ₽</span>
                     </div>
                     <p className="text-xs text-gray-500 text-center">
