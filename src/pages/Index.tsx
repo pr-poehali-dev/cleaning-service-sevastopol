@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import Icon from "@/components/ui/icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Index() {
   const [showCalculator, setShowCalculator] = useState(false);
@@ -45,6 +45,11 @@ export default function Index() {
       duration: 5000,
     });
   };
+
+  useEffect(() => {
+    calculateCost();
+  }, [serviceType, squareMeters, windowCount]);
+
   const services = [
     {
       icon: "Home",
@@ -305,7 +310,6 @@ export default function Index() {
                   setWindowCount("");
                   handleMaintenanceSelect();
                 }
-                setTimeout(() => calculateCost(), 0);
               }}>
                 <SelectTrigger className="h-12">
                   <SelectValue placeholder="Выберите тип уборки" />
@@ -326,7 +330,6 @@ export default function Index() {
                 value={squareMeters}
                 onChange={(e) => {
                   setSquareMeters(e.target.value);
-                  setTimeout(() => calculateCost(), 0);
                 }}
                 className="h-12"
               />
@@ -341,7 +344,6 @@ export default function Index() {
                   value={windowCount}
                   onChange={(e) => {
                     setWindowCount(e.target.value);
-                    setTimeout(() => calculateCost(), 0);
                   }}
                   className="h-12"
                 />
