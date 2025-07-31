@@ -350,29 +350,9 @@ export default function Index() {
 
             {totalCost > 0 && (
               <div className="bg-primary/5 rounded-xl p-6 space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Расчет стоимости:</h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  {serviceType && squareMeters && (
-                    <div className="flex justify-between">
-                      <span>{servicePrices[serviceType as keyof typeof servicePrices].name} ({squareMeters} м²)</span>
-                      <span>{(parseFloat(squareMeters) * servicePrices[serviceType as keyof typeof servicePrices].price).toLocaleString()} ₽</span>
-                    </div>
-                  )}
-                  {windowCount && (
-                    <div className="flex justify-between">
-                      <span>Мытье окон ({windowCount} м²)</span>
-                      <span>{(parseFloat(windowCount) * servicePrices[serviceType as keyof typeof servicePrices].windowPrice).toLocaleString()} ₽</span>
-                    </div>
-                  )}
-                  <div className="border-t pt-2 space-y-1">
-                    <div className="flex justify-between font-semibold text-lg text-gray-900">
-                      <span>Итого:</span>
-                      <span className="text-primary">{totalCost.toLocaleString()} ₽</span>
-                    </div>
-                    <p className="text-xs text-gray-500 text-center">
-                      Для более точной стоимости напишите или позвоните нам
-                    </p>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">{totalCost.toLocaleString()} ₽</div>
+                  <p className="text-sm text-gray-600 mt-1">Расчет стоимости</p>
                 </div>
               </div>
             )}
