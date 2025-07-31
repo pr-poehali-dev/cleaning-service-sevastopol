@@ -23,15 +23,15 @@ export default function Index() {
   };
 
   const calculateCost = () => {
-    if (!serviceType || !squareMeters) {
+    const squareMetersNum = parseFloat(squareMeters) || 0;
+    const windowCountNum = parseFloat(windowCount) || 0;
+    
+    if (!serviceType || squareMetersNum <= 0) {
       setTotalCost(0);
       return;
     }
     
     const service = servicePrices[serviceType as keyof typeof servicePrices];
-    const squareMetersNum = parseFloat(squareMeters) || 0;
-    const windowCountNum = parseFloat(windowCount) || 0;
-    
     const areaTotal = squareMetersNum * service.price;
     const windowTotal = (serviceType !== "maintenance" && windowCountNum > 0) ? windowCountNum * service.windowPrice : 0;
     
